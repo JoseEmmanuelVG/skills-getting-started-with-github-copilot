@@ -83,4 +83,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Initialize app
   fetchActivities();
+
+  // Handle /generate form submission
+  const generateForm = document.getElementById('generateForm');
+  const inputText = document.getElementById('inputText');
+  const resultDiv = document.getElementById('result');
+  if (generateForm && inputText && resultDiv) {
+    generateForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const text = inputText.value;
+      resultDiv.textContent = 'Loading...';
+      try {
+        const response = await fetch('/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ text })
+        });
+        const data = await response.json();
+        resultDiv.textContent = data.result;
+      } catch (err) {
+        resultDiv.textContent = 'Error: ' + err.message;
+      }
+    });
+  }
 });
